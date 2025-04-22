@@ -1,8 +1,8 @@
 # Kali Archive
 
-[![Status do Projeto](https://img.shields.io/badge/Status-Ativo-brightgreen.svg)](https://github.com/yourusername/kali-archive)
+[![Status do Projeto](https://img.shields.io/badge/Status-Ativo-brightgreen.svg)](https://github.com/mcall009/kali-archive)
 [![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue.svg)](https://www.python.org/downloads/)
-[![Licença](https://img.shields.io/badge/Licença-MIT-yellow.svg)](LICENSE)
+[![Licença](https://img.shields.io/badge/Licen%C3%A7a-GPL%20v3-blue.svg)](LICENSE)
 
 Ferramenta avançada para extração e reconstrução de conteúdo web histórico via Wayback Machine. O Kali Archive realiza a recuperação completa, processamento e indexação de versões históricas de sites, preservando todos os recursos associados (HTML, CSS, JavaScript, imagens) em uma estrutura navegável localmente.
 
@@ -75,7 +75,7 @@ O método mais simples é usar o script de instalação fornecido, que configura
 
 ```bash
 # Clone ou baixe o repositório
-git clone https://github.com/yourusername/kali-archive.git
+git clone https://github.com/mcall009/kali-archive.git
 cd kali-archive
 
 # Torne o script de instalação executável
@@ -93,7 +93,7 @@ Se preferir instalar manualmente:
 
 ```bash
 # Clone ou baixe o repositório
-git clone https://github.com/yourusername/kali-archive.git
+git clone https://github.com/mcall009/kali-archive.git
 cd kali-archive
 
 # Crie um ambiente virtual Python
