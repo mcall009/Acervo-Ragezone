@@ -10,7 +10,7 @@ Ferramenta avançada para extração e reconstrução de conteúdo web históric
 
 ## 📋 Sumário
 
-- [Visão Geral](#visão-geral)
+- [Visão Geral](#-visão-geral)
 - [Características Principais](#características-principais)
 - [Requisitos](#requisitos)
 - [Instalação](#instalação)
