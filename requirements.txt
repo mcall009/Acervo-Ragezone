@@ -1,0 +1,22 @@
+# Componentes core
+aiohttp>=3.8.1
+aiofiles>=0.8.0
+beautifulsoup4>=4.10.0
+requests>=2.27.1
+urllib3>=1.26.9
+tqdm>=4.64.0
+psutil>=5.9.0
+diskcache>=5.4.0
+
+# Processamento web
+lxml>=4.8.0
+bs4>=0.0.1
+charset-normalizer>=2.0.12
+
+# Utilitários
+asyncio>=3.4.3
+typing-extensions>=4.1.1
+certifi>=2022.5.18
+
+# Suporte condicional
+pywin32>=303; platform_system=="Windows"

@@ -1,0 +1,27 @@
+# Usado com: pip uninstall -y -r uninstall_requirements.txt
+
+# Componentes core
+aiohttp
+aiofiles
+beautifulsoup4
+requests
+urllib3
+tqdm
+psutil
+diskcache
+
+# Processamento web
+lxml
+bs4
+charset-normalizer
+
+# Utilitários
+asyncio
+typing-extensions
+certifi
+
+# Suporte condicional
+pywin32; platform_system=="Windows"
+
+# Pacote principal
+kali-archive
