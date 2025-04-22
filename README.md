@@ -17,7 +17,7 @@ Ferramenta avançada para extração e reconstrução de conteúdo web históric
   - [Instalação Automática](#-instalação-automática)
   - [Instalação Manual](#-instalação-manual)
 - [Uso Básico](#-uso-básico)
-- [Parâmetros e Opções](#-parâmetros-e-opções)
+- [Parâmetros e Opções](#%EF%B8%8F-parâmetros-e-opções)
   - [Formatos de Data Aceitos](#-formatos-de-data-aceitos)
 - [Arquitetura e Funcionamento](#-arquitetura-e-funcionamento)
   - [Componentes Principais](#-componentes-principais)
