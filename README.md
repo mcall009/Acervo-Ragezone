@@ -142,6 +142,8 @@ python kali_archive.py --domain exemplo.com.br --output meu_arquivo
 Os arquivos serão salvos no diretório `meu_arquivo` em vez do padrão (nome do domínio).
 
 ## 🎛️ Parâmetros e Opções
+Nota: Atualmente o diretório de saída (output) está definido com o valor padrão de "kali_archive".
+Em breve o script será atualizado para a pasta ser gerada com o nome exato do domínio, como mostra na tabela abaixo.
 
 O Kali Archive oferece um conjunto abrangente de opções para personalizar o comportamento da ferramenta:
 
@@ -456,10 +458,11 @@ MEMORY_LIMIT_PERCENT = 85  # Limite de uso de memória (%)
 CONN_LIMIT = 50  # Limite de conexões HTTP simultâneas
 REQUEST_TIMEOUT = 30  # Timeout de requisições (segundos)
 FIXED_FALLBACK_DATE = "20000101"  # Data de fallback fixa
-DYNAMIC_FALLBACK_YEARS = 5  # Anos para fallback dinâmico
+DYNAMIC_FALLBACK_YEARS = 5  # Anos atrás para fallback dinâmico
 ```
 
 ### Personalização do Template
+Nota: Atualmente o index_template.html ainda está definido no diretório raiz por padrão, então, apenas edite-o sem criar a pasta "templates".
 
 Para personalizar a interface web gerada:
 
