@@ -8,7 +8,7 @@ Ferramenta avançada para extração e reconstrução de conteúdo web históric
 
 > **AVISO**: Use esta ferramenta de forma responsável, respeitando os termos de serviço do Internet Archive (archive.org) e as políticas de robôs do site alvo.
 
-## 📋 Sumário
+## 📋 [Sumário](#-sumário).
 
 - [Visão Geral](#-visão-geral)
 - [Características Principais](#-características-principais)
