@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kali Archive - Preservação Digital</title>
+    <meta name="description" content="Arquivo digital de páginas preservadas via Wayback Machine">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3B82F6;
+            --primary-dark: #2563EB;
+            --secondary: #10B981;
+            --secondary-dark: #059669;
+            --dark: #1F2937;
+            --darker: #111827;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+            --light-gray: #E5E7EB;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .version-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        }
+        .version-list.show {
+            max-height: 2000px;
+            transition: max-height 1s ease-in-out;
+        }
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        /* Esquema de cores escuro */
+        .dark {
+            background-color: var(--darker);
+            color: var(--light);
+        }
+        .dark .bg-white {
+            background-color: var(--dark) !important;
+        }
+        .dark .border-gray-200 {
+            border-color: #374151 !important;
+        }
+        .dark .text-gray-600, .dark .text-gray-700 {
+            color: #D1D5DB !important;
+        }
+        .dark .bg-gray-100 {
+            background-color: #374151 !important;
+        }
+        .dark .bg-gray-50 {
+            background-color: #1F2937 !important;
+        }
+        /* Cards e hover effects */
+        .hover-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .dark .hover-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+        /* Transições suaves */
+        button, a, select, input {
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+        }
+        /* Responsividade melhorada */
+        @media (max-width: 640px) {
+            .responsive-table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+        /* Badge de estatísticas */
+        .stats-badge {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-weight: 500;
+        }
+        .dark .stats-badge {
+            background-color: rgba(59, 130, 246, 0.2);
+        }
+        /* Timeline para versões */
+        .timeline-item {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+        .timeline-item:not(:last-child):after {
+            content: '';
+            position: absolute;
+            left: 0.35rem;
+            top: 1.25rem;
+            bottom: -0.5rem;
+            width: 2px;
+            background-color: #E5E7EB;
+        }
+        .dark .timeline-item:not(:last-child):after {
+            background-color: #4B5563;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 sm:px-6 py-8">
+        <header class="mb-10 animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <svg class="h-8 w-8 text-blue-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                    </svg>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Kali Archive</h1>
+                </div>
+                <div class="flex space-x-3">
+                    <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <svg class="h-5 w-5" id="moonIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <svg class="h-5 w-5 hidden" id="sunIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <p class="text-center text-gray-600 dark:text-gray-300 mb-4">Preservação digital de páginas históricas recuperadas via Wayback Machine</p>
+            <div class="flex flex-wrap justify-center gap-4 mb-6">
+                <div class="stats-badge animate-fade-in" style="animation-delay: 0.1s">
+                    <span id="total-urls">{{TOTAL_URLS}}</span> URLs
+                </div>
+                <div class="stats-badge animate-fade-in" style="animation-delay: 0.2s">
+                    <span id="total-versions">{{TOTAL_VERSIONS}}</span> versões
+                </div>
+                <div class="stats-badge animate-fade-in" style="animation-delay: 0.3s">
+                    <span id="filtered-count">0</span> resultados filtrados
+                </div>
+            </div>
+        </header>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-10 animate-fade-in" style="animation-delay: 0.4s">
+            <div class="p-6">
+                <div class="flex flex-col lg:flex-row gap-4 mb-6">
+                    <div class="flex-1">
+                        <div class="relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                            <input type="text" id="search" class="block w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" placeholder="Buscar por URL ou conteúdo...">
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="relative">
+                            <select id="filterType" class="block w-full pl-3 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg appearance-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                <option value="all">Todos os tipos</option>
+                                {{TYPE_OPTIONS}}
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <select id="filterYear" class="block w-full pl-3 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg appearance-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                <option value="all">Todos os anos</option>
+                                {{YEAR_OPTIONS}}
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                        <button id="toggleAllVersions" class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg py-3 px-4 flex items-center justify-center transition duration-200 hover-card">
+                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Mostrar versões
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto responsive-table">
+                    <table id="pagesTable" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" onclick="sortTable(0)">
+                                    <div class="flex items-center">
+                                        URL
+                                        <svg class="ml-1 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                                        </svg>
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" onclick="sortTable(1)">
+                                    <div class="flex items-center">
+                                        Última Captura
+                                        <svg class="ml-1 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                                        </svg>
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    Versões
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {{TABLE_ROWS}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center text-gray-500 dark:text-gray-400 text-sm py-6 animate-fade-in" style="animation-delay: 0.6s">
+            <p class="mb-2">Kali Archive - Ferramenta de preservação digital</p>
+            <p>© 2023 - Gerado com <span class="text-blue-500 dark:text-blue-400">❤</span></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButtons = document.querySelectorAll('.toggle-versions');
+            const toggleAllButton = document.getElementById('toggleAllVersions');
+            const search = document.getElementById('search');
+            const filterType = document.getElementById('filterType');
+            const filterYear = document.getElementById('filterYear');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const moonIcon = document.getElementById('moonIcon');
+            const sunIcon = document.getElementById('sunIcon');
+            let allVersionsVisible = false;
+            
+            // Verificar preferência do usuário para dark mode
+            if (localStorage.getItem('darkMode') === 'true' || 
+                window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.add('dark');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            }
+            
+            // Handlers para botões de versão
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const versionList = this.nextElementSibling;
+                    versionList.classList.toggle('show');
+                    this.classList.toggle('bg-blue-100');
+                    this.classList.toggle('dark:bg-blue-900');
+                    this.classList.toggle('text-blue-800');
+                    this.classList.toggle('dark:text-blue-200');
+                    e.stopPropagation();
+                });
+            });
+            
+            // Toggle para mostrar/ocultar todas as versões
+            toggleAllButton.addEventListener('click', function() {
+                allVersionsVisible = !allVersionsVisible;
+                document.querySelectorAll('.version-list').forEach(list => {
+                    if (allVersionsVisible) {
+                        list.classList.add('show');
+                        this.innerHTML = `
+                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                            </svg>
+                            Ocultar versões
+                        `;
+                    } else {
+                        list.classList.remove('show');
+                        this.innerHTML = `
+                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Mostrar versões
+                        `;
+                    }
+                });
+                
+                // Atualizar também os botões individuais
+                toggleButtons.forEach(button => {
+                    if (allVersionsVisible) {
+                        button.classList.add('bg-blue-100', 'dark:bg-blue-900', 'text-blue-800', 'dark:text-blue-200');
+                    } else {
+                        button.classList.remove('bg-blue-100', 'dark:bg-blue-900', 'text-blue-800', 'dark:text-blue-200');
+                    }
+                });
+            });
+            
+            // Toggle para dark mode
+            darkModeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark');
+                moonIcon.classList.toggle('hidden');
+                sunIcon.classList.toggle('hidden');
+                
+                if (document.body.classList.contains('dark')) {
+                    localStorage.setItem('darkMode', 'true');
+                } else {
+                    localStorage.setItem('darkMode', 'false');
+                }
+            });
+            
+            // Filtros
+            search.addEventListener('keyup', filterTable);
+            filterType.addEventListener('change', filterTable);
+            filterYear.addEventListener('change', filterTable);
+            
+            // Função para filtrar a tabela
+            function filterTable() {
+                const searchValue = search.value.toLowerCase();
+                const typeFilter = filterType.value;
+                const yearFilter = filterYear.value;
+                const rows = document.querySelectorAll('#pagesTable tbody tr');
+                let visibleCount = 0;
+                
+                rows.forEach(row => {
+                    const url = row.querySelector('td:first-child').textContent.toLowerCase();
+                    const type = row.dataset.type;
+                    const year = row.dataset.year;
+                    
+                    const matchesSearch = url.includes(searchValue);
+                    const matchesType = typeFilter === 'all' || type === typeFilter;
+                    const matchesYear = yearFilter === 'all' || year === yearFilter;
+                    
+                    if (matchesSearch && matchesType && matchesYear) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Atualizar contador de resultados filtrados
+                document.getElementById('filtered-count').textContent = visibleCount;
+            }
+            
+            // Inicializar contadores
+            const totalRows = document.querySelectorAll('#pagesTable tbody tr').length;
+            document.getElementById('filtered-count').textContent = totalRows;
+            
+            // Efeito de aparecimento das linhas da tabela
+            const tableRows = document.querySelectorAll('#pagesTable tbody tr');
+            tableRows.forEach((row, index) => {
+                row.classList.add('animate-slide-in');
+                row.style.animationDelay = `${0.05 * index}s`;
+                row.style.opacity = '0';
+            });
+        });
+        
+        // Função para ordenar a tabela
+        function sortTable(n) {
+            let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("pagesTable");
+            switching = true;
+            dir = "asc";
+            
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+            
+            // Atualizar ícones de ordenação
+            const headers = table.querySelectorAll("th");
+            headers.forEach((header, index) => {
+                const icon = header.querySelector("svg");
+                if (index === n) {
+                    icon.innerHTML = dir === "asc" 
+                        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 15l4-4 4 4" />'
+                        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4 4 4-4" />';
+                    icon.classList.remove('text-gray-400');
+                    icon.classList.add('text-blue-500');
+                } else {
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />';
+                    icon.classList.add('text-gray-400');
+                    icon.classList.remove('text-blue-500');
+                }
+            });
+        }
+    </script>
+</body>
+</html> 
